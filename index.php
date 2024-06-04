@@ -13,7 +13,6 @@ if (isset($_POST['delete'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +27,6 @@ if (isset($_POST['delete'])) {
 <link rel="stylesheet" href="./includes/style.css">
 
 <link rel="stylesheet" href="package/dist/sweetalert2.css">
-
 </head>
 <body>
 
@@ -53,38 +51,44 @@ if (isset($_POST['delete'])) {
       </thead>
       <tbody>
         <?php
-          $counter = 1;
-          $data = $con->view();
-          foreach($data as $row) {?>
+        $counter = 1;
+        $data = $con->view();
+        foreach($data as $row) {
+        ?>
+
         <tr>
           <td><?php echo $counter++ ?></td>
           <td>
-        <?php if (!empty($row['user_profile_picture'])): ?>
-          <img src="<?php echo htmlspecialchars($row['user_profile_picture']); ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
-        <?php else: ?>
-          <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
-        <?php endif; ?>
-      </td>
-          <td><?php echo $row['user_firstname'];?> </td>
-          <td><?php echo $row['user_lastname'];?> </td>
-          <td><?php echo $row['user_birthday'];?> </td>
-          <td><?php echo $row['user_sex'];?> </td>
-          <td><?php echo $row['user_name'];?> </td>
-          <td><?php echo $row['address'];?> </td>
+            <?php if (!empty($row['user_profile_picture'])): ?>
+            <img src="<?php echo htmlspecialchars($row['user_profile_picture']); ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
+            <?php else: ?>
+            <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
+            <?php endif; ?>
+        </td>
+
+          <td><?php echo $row['user_firstname']; ?></td>
+          <td><?php echo $row['user_lastname']; ?></td>
+          <td><?php echo $row['user_birthday']; ?></td>
+          <td><?php echo $row['user_sex']; ?></td>
+          <td><?php echo $row['user_name']; ?></td>
+          <td><?php echo $row['address']; ?></td>
           <td>
-          <a href="#" class="btn btn-primary btn-sm">Edit</a>
         <!-- Delete button -->
-        <form method="POST" style="display: inline;">
-            <input type="hidden" name="id" value="<?php echo $row['user_id'];?>">
-            <button type="submit" name="delete" class="btn btn-danger btn-sm" value= "Delete" 
-            onclick="return confirm('Are you sure you want to delete this user?')">
-            <i class= "fas fa-trash-alt"></i>
+        <form action="update.php"method="POST" class="d-inline">
+            <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
+            <button type="submit" name="delete" class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to update this user information?')">
+            <i class="fas fa-edit"></i>
+            </button>
+        </form>
+        <form method="POST" class="d-inline">
+            <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
+            <button type="submit" name="delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">
+            <i class="fas fa-trash-alt"></i>
+            </button>
         </form>
           </td>
-        </tr>
-
+        </tr> 
         <?php } ?>
-
         <!-- Add more rows for additional users -->
       </tbody>
     </table>
@@ -99,6 +103,7 @@ if (isset($_POST['delete'])) {
 <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
 <!-- Bootsrap JS na nagpapagana ng danger alert natin -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="package/dist/sweetalert2.js"></script>
 
 <!-- Pop Up Messages after a succesful transaction starts here --> <script>
@@ -112,6 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'success':
         title = 'Success!';
         text = 'Record is successfully deleted.';
+        icon = 'success';
+        break;
+        case 'success1':
+        title = 'Success!';
+        text = 'Record is successfully updated.';
         icon = 'success';
         break;
       case 'error':
@@ -134,5 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script> <!-- Pop Up Messages after a succesful transaction ends here -->
+
 </body>
 </html>
