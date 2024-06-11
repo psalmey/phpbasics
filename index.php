@@ -2,7 +2,12 @@
 require_once('classes/database.php');
 $con = new database();
 session_start();
-
+ 
+if (!isset($_SESSION['username']) || $_SESSION['account_type'] != 0 ) {
+  header('location:login.php');
+  exit();
+}
+ 
 if (isset($_POST['delete'])) {
     $id = $_POST['id'];
     if ($con->delete($id)) {
@@ -11,8 +16,9 @@ if (isset($_POST['delete'])) {
         echo "Something went wrong.";
     }
 }
+ 
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +45,7 @@ if (isset($_POST['delete'])) {
       <thead>
         <tr>
           <th>#</th>
-          <th>Picture</th>
+          <th>picture</th>
           <th>First Name</th>
           <th>Last Name</th>
           <th>Birthday</th>
@@ -53,41 +59,40 @@ if (isset($_POST['delete'])) {
         <?php
         $counter = 1;
         $data = $con->view();
-        foreach($data as $row) {
-        ?>
-
+        foreach($data as $row) {?>
         <tr>
           <td><?php echo $counter++ ?></td>
           <td>
-            <?php if (!empty($row['user_profile_picture'])): ?>
-            <img src="<?php echo htmlspecialchars($row['user_profile_picture']); ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
-            <?php else: ?>
-            <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
-            <?php endif; ?>
-        </td>
-
-          <td><?php echo $row['user_firstname']; ?></td>
+        <?php if (!empty($row['user_profile_picture'])): ?>
+          <img src="<?php echo htmlspecialchars($row['user_profile_picture']); ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
+        <?php else: ?>
+          <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
+        <?php endif; ?>
+      </td>
+          <td><?php echo $row['user_firstname']; ?></td>  
           <td><?php echo $row['user_lastname']; ?></td>
-          <td><?php echo $row['user_birthday']; ?></td>
-          <td><?php echo $row['user_sex']; ?></td>
-          <td><?php echo $row['user_name']; ?></td>
-          <td><?php echo $row['address']; ?></td>
+          <td><?php echo $row['user_birthday']; ?></td></td>
+          <td><?php echo $row['user_sex']; ?></td></td>
+          <td><?php echo $row['user_name']; ?></td></td>
+          <td><?php echo $row['address']; ?></td></td>
           <td>
-        <!-- Delete button -->
-        <form action="update.php"method="POST" class="d-inline">
-            <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
-            <button type="submit" name="delete" class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to update this user information?')">
+          <form action = "update.php" method="POST" style="display: inline;">
+            <input type="hidden" name="id" value = "<?php echo $row['user_id'];?>">
+            <button type="submit" name = "delete" class="btn btn-primary btn-sm" value = "Delete"
+            onclick="return confirm('You will be directed to the Update page')">
             <i class="fas fa-edit"></i>
             </button>
-        </form>
-        <form method="POST" class="d-inline">
-            <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
-            <button type="submit" name="delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">
+        </form>    
+        <!-- Delete button -->
+        <form method="POST" style="display: inline;">
+            <input type="hidden" name="id" value = "<?php echo $row['user_id'];?>">
+            <button type="submit" name = "delete" class="btn btn-danger btn-sm" value = "Delete"
+            onclick="return confirm('Are you sure you want to delete this user?')">
             <i class="fas fa-trash-alt"></i>
             </button>
         </form>
           </td>
-        </tr> 
+        </tr>
         <?php } ?>
         <!-- Add more rows for additional users -->
       </tbody>
@@ -95,7 +100,7 @@ if (isset($_POST['delete'])) {
   </div>
 </div>
 </div>
-
+ 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -110,7 +115,7 @@ if (isset($_POST['delete'])) {
 document.addEventListener('DOMContentLoaded', function() {
   const params = new URLSearchParams(window.location.search);
   const status = params.get('status');
-
+ 
   if (status) {
     let title, text, icon;
     switch (status) {
@@ -122,6 +127,11 @@ document.addEventListener('DOMContentLoaded', function() {
         case 'success1':
         title = 'Success!';
         text = 'Record is successfully updated.';
+        icon = 'success';
+        break;
+        case 'success2':
+        title = 'Success!';
+        text = 'Record is successfully login.';
         icon = 'success';
         break;
       case 'error':
